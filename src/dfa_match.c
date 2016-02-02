@@ -4,10 +4,10 @@ WAF mode level 1
 DFA to block
 
 Block payloads SQLi
-union"|"select"|"insert"|"\@version"|"load_file"|"1=1"|"2=2"
+union"|"select"|"insert"|"\@version"|"load_file"|"1=1"|"2=2" etc...
 
 Block Payloads XSS
-"eval"|"script"|"onstart"|"onload"|"onerror"|"onpageshow"|"onprogress"|"alert"|"onclick"|"onmouseover"|"onfinish"|"fromCharCode"
+"eval"|"script"|"onstart"|"onload"|"onerror"|"onpageshow"|"onprogress"|"alert"|"onclick"|"onmouseover"|"onfinish"|"fromCharCode" etc..
 
 Block Payload PATH traversal
 ../|..\   etc...
