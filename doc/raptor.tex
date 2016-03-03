@@ -77,7 +77,7 @@
   Following this to get, decompress, compile and execute:
   \begin{itemize}
   \item wget git clone https://github.com/CoolerVoid/raptor\_waf
-  \item cd raptor_waf; make; bin/Raptor
+  \item cd raptor\_waf; make; bin/Raptor
   \end{itemize}
 \end{frame}
 
@@ -120,7 +120,9 @@
   \item Follow this command
   \item bin/Raptor --host Address\_of\_http\_server2Protect -p 80 -r 8886 -w 4 -o logAttacks.txt 
   \item Open the machine of Raptor at any computer of network http://waf\_machine:8886
-  \item Ok raptor protect the HTTP server that you redirect, try attack... 	 
+  \item Copy vulnerable PHP code to your web server directory
+  \item cp doc/test\_dfa/test.php /var/www/html
+  \item Ok raptor protect the HTTP server at http://server\_ip:8886/test.php
   \end{itemize}
 \end{frame}
 
