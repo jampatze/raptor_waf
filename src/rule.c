@@ -38,8 +38,6 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	{
 		char *http_request2=all2lowcase(clbuf);
 		strcpy(tmp3,http_request2);
- 		memset(http_request2,0,strlen(http_request2)-1);
-		xfree((void **)http_request2);
 	} else {
 		strcpy(tmp3,(char *)clbuf); 
 	}
@@ -114,7 +112,7 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 		sprintf(report,"Path Traversal Attack\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
 		WriteFile(logfile,report);
 		memset(report,0,BUF_SIZE+255);
-		xfree((void**)report);
+		XFREE(report);
 		block=true;
 	}
 
@@ -125,7 +123,7 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 		sprintf(report,"SQL injection Attack\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
 		WriteFile(logfile,report);
 		memset(report,0,BUF_SIZE+255);
-		xfree((void**)report);
+		XFREE(report);
 		block=true;
 	}
 
@@ -136,7 +134,7 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 		sprintf(report,"Cross-site scripting\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
 		WriteFile(logfile,report);
 		memset(report,0,BUF_SIZE+255);
-		xfree((void**)report);
+		XFREE(report);
 		block=true;
 	}
 
@@ -150,21 +148,16 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 		sprintf(report,"Address at blacklist try connect\n IP: %s\n Time: %s\n-----\n",addr,d);
 		WriteFile(logfile,report);
 		memset(report,0,255);
-		xfree((void**)report);
+		XFREE(report);
 		block=true;
 		memset(addr,0,strlen(addr));
-		xfree((void **)addr);
+		XFREE(addr);
 		return block;
 	}
 
 	memset(addr,0,strlen(addr));
-	xfree((void **)addr);
+	XFREE(addr);
 
-	memset(clbuf,0,BUF_SIZE-1);	
-	xfree((void **)clbuf);	
-
-	memset(tmpbuf,0,BUF_SIZE-1);	
-	xfree((void **)tmpbuf);	
 		
     	return block;
 }

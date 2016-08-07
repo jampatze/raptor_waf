@@ -188,7 +188,7 @@ int bridge_of_data(int from_socket, int to_socket, char *logfile, int wafmode)
 	}
 
 	memset(tmp_addr,0,strlen(tmp_addr));
-	xfree((void **)tmp_addr);		
+	XFREE(tmp_addr);		
 		
     	return sendbytes;
 }

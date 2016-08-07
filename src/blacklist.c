@@ -33,7 +33,6 @@ bool blacklist_ip(char * addr)
 	}
 	arq=NULL;
 
-	DEBUG("Return bool is %s \n",(at_list==false)?"false":"true");
 
 	return at_list;
 }

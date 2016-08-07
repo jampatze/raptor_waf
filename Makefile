@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-W -Wall -Wextra -O2 -fstack-protector-all
+CFLAGS=-W -Wall -Wextra -Wextra -O2 -fstack-protector-all
 DFLAGS=-D_FORTIFY_SOURCE=2
 DIR=src/
 DIROUT=bin/

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "utils.h"
+#define XFREE(x) xfree((void **)x);
 
 void *xmalloc (size_t size);
 void *xcalloc (size_t mem, size_t size);
