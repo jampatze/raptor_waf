@@ -31,7 +31,7 @@ char *get_ip_of(int sock)
 	}
 	
 	char *tmp=xmalloc(sizeof(ipstr)+1);
-	strlcpy(tmp,ipstr,sizeof(tmp));
+	strlcpy(tmp,ipstr,sizeof(ipstr)+1);
 
 	return tmp;
 }
