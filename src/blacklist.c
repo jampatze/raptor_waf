@@ -22,7 +22,7 @@ bool blacklist_ip(char * addr)
 
 	while( fgets(line,sizeof line,arq) && at_list==false )
 	{    
-		if(strnstr(line,addr,strlen(line)))
+		if(strnstr(line,addr,128))
 			at_list=true;
 	}
 
