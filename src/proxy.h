@@ -1,19 +1,22 @@
 #include <stdio.h>
+#include <errno.h>
+#include <netdb.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <errno.h>
 #include <pthread.h>
-#include <netdb.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+#include <arpa/inet.h> 
+#include <stdbool.h>
 #include <alloca.h>
 #include "utils.h"
+#include "rule.h"
 #include "mem_ops.h"
-#include "file_ops.h"
 //#include "dfa_match.h"
+#include "file_ops.h"
+#include "../lib/BSD/strsec.h"
 #include "blacklist.h"
 
 

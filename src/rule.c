@@ -14,14 +14,15 @@
 #include "dfa_match.h"
 #include "file_ops.h"
 #include "blacklist.h"
-
+#include "../lib/BSD/strsec.h"
 
 bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, int wafmode)
 {
 	int line_number=1;
-	time_t t = time(NULL); 
+	time_t t = time(NULL);
+	size_t tmp_size_buf=sizeof(char)*BUF_SIZE+1; 
 	bool xss=false,sqli=false,pathtraversal=false,match=false,block=false,blacklist=false;
-	char *tmp3=alloca(sizeof(char)*BUF_SIZE+1),*tmp4=tmp3,*d=ctime(&t); 
+	char *tmp3=alloca(tmp_size_buf),*tmp4=tmp3,*d=ctime(&t); 
 
 	if(blacklist_ip(addr)==true) // function in blacklist.c
 	{ 
@@ -37,9 +38,9 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	if(wafmode==2 || wafmode==4)
 	{
 		char *http_request2=all2lowcase(clbuf);
-		strcpy(tmp3,http_request2);
+		strlcpy(tmp3,http_request2,tmp_size_buf);
 	} else {
-		strcpy(tmp3,(char *)clbuf); 
+		strlcpy(tmp3,(char *)clbuf,tmp_size_buf); 
 	}
 
 	
@@ -108,8 +109,9 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	if(pathtraversal==true)
 	{
 		char *report=NULL;
-		report=xmalloc(BUF_SIZE+256);
-		sprintf(report,"Path Traversal Attack\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
+		size_t tmp_size=BUF_SIZE+256;
+		report=xmalloc(tmp_size);
+		snprintf(report,tmp_size,"Path Traversal Attack\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
 		WriteFile(logfile,report);
 		memset(report,0,BUF_SIZE+255);
 		XFREE(report);
@@ -119,8 +121,9 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	if(sqli==true)
 	{
 		char *report=NULL;
-		report=xmalloc(BUF_SIZE+256);
-		sprintf(report,"SQL injection Attack\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
+		size_t tmp_size=BUF_SIZE+256;
+		report=xmalloc(tmp_size);
+		snprintf(report,tmp_size,"SQL injection Attack\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
 		WriteFile(logfile,report);
 		memset(report,0,BUF_SIZE+255);
 		XFREE(report);
@@ -130,8 +133,9 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	if(xss==true)
 	{	
 		char *report=NULL;
-		report=xmalloc(BUF_SIZE+256);
-		sprintf(report,"Cross-site scripting\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
+		size_t tmp_size=BUF_SIZE+256;
+		report=xmalloc(tmp_size);
+		snprintf(report,tmp_size,"Cross-site scripting\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
 		WriteFile(logfile,report);
 		memset(report,0,BUF_SIZE+255);
 		XFREE(report);
@@ -145,7 +149,7 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	{	
 		char *report=NULL;
 		report=xmalloc(256);
-		sprintf(report,"Address at blacklist try connect\n IP: %s\n Time: %s\n-----\n",addr,d);
+		snprintf(report,256,"Address at blacklist try connect\n IP: %s\n Time: %s\n-----\n",addr,d);
 		WriteFile(logfile,report);
 		memset(report,0,255);
 		XFREE(report);

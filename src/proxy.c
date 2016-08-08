@@ -1,22 +1,5 @@
-#include <stdio.h>
-#include <errno.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
-#include <pthread.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h> 
-#include <stdbool.h>
-#include <alloca.h>
 #include "proxy.h"
-#include "utils.h"
-#include "rule.h"
-#include "mem_ops.h"
-//#include "dfa_match.h"
-#include "file_ops.h"
+#include "../lib/BSD/strsec.h"
 
 /*
 items of struct tcp_server_thread_info
@@ -48,7 +31,7 @@ char *get_ip_of(int sock)
 	}
 	
 	char *tmp=xmalloc(sizeof(ipstr)+1);
-	strcpy(tmp,ipstr);
+	strlcpy(tmp,ipstr,sizeof(tmp));
 
 	return tmp;
 }
@@ -73,7 +56,7 @@ int tcp_create_socket(int port)
  	hints.ai_flags = AI_PASSIVE;
 //	hints.ai_flags |= AI_CANONNAME; 	
 	char tmp[6];
- 	sprintf(tmp,"%5d",port);
+ 	snprintf(tmp,sizeof(tmp),"%5d",port);
  	getaddrinfo(NULL, tmp, &hints, &res);
 
 	if ((s = socket(res->ai_family, SOCK_STREAM, 0)) < 0) 
@@ -98,7 +81,7 @@ void tcp_bind_and_listen(int socket, int port)
  	hints.ai_flags = AI_PASSIVE;
 // 	hints.ai_flags |= AI_CANONNAME;
  	char tmp[6]; 
- 	sprintf(tmp,"%5d",port);
+ 	snprintf(tmp,sizeof(tmp),"%5d",port);
  	getaddrinfo(NULL, tmp, &hints, &res);
 
 
@@ -130,7 +113,7 @@ int tcp_connect_to_stamp(const char* stamp, int port)
  	hints.ai_flags = AI_PASSIVE;
 //	hints.ai_flags |= AI_CANONNAME;
  	char tmp[6]; // max is 65535
- 	sprintf(tmp,"%5d",port);
+ 	snprintf(tmp,sizeof(tmp),"%5d",port);
  	getaddrinfo(stamp, tmp, &hints, &res);
 
 
@@ -282,10 +265,10 @@ void tcp_reverse_proxy(int server_port, const char* stamp, int stamp_port, int w
         	struct tcp_server_thread_info *pinfo =(struct tcp_server_thread_info *) xmalloc(sizeof(struct tcp_server_thread_info));
         	bzero(pinfo, sizeof(struct tcp_server_thread_info));
 
-        	strcpy(pinfo->stamp, stamp);
+        	strlcpy(pinfo->stamp, stamp,sizeof(pinfo->stamp));
         	pinfo->stamp_port = stamp_port;
         	pinfo->accepted_socket = clifd;
-		strcpy(pinfo->log_reg,logname);
+		strlcpy(pinfo->log_reg,logname,sizeof(pinfo->log_reg));
         	pinfo->wafmode = waf_mode;
 
         	int ret = pthread_create(&id, NULL, tcp_server_handler, pinfo);

@@ -2,8 +2,8 @@
 #include <sys/types.h>
 #include <string.h>		
 #include <stdlib.h>
+#include <assert.h>
 #include <time.h>
-#include "utils.h"
 #define XFREE(x) xfree((void **)x);
 
 void *xmalloc (size_t size);

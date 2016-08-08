@@ -1,8 +1,3 @@
-#include <stdio.h>	
-#include <sys/types.h>
-#include <string.h>		
-#include <stdlib.h>
-#include <assert.h>
 #include "mem_ops.h"
 #include "utils.h"
 

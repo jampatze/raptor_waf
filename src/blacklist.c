@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
+#include "blacklist.h"
 #include "mem_ops.h"
+#include "utils.h"
+#include "../lib/BSD/strsec.h"
 
 //read lines of file
 bool blacklist_ip(char * addr)
@@ -22,7 +22,7 @@ bool blacklist_ip(char * addr)
 
 	while( fgets(line,sizeof line,arq) && at_list==false )
 	{    
-		if(strstr(line,addr))
+		if(strnstr(line,addr,strlen(line)))
 			at_list=true;
 	}
 

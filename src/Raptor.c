@@ -12,7 +12,7 @@
 #include <sys/resource.h>
 #include "utils.h"
 #include "proxy.h"
-
+#include "../lib/BSD/strsec.h"
 
 void init_banner_raptor()
 {
