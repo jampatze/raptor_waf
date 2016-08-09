@@ -181,7 +181,7 @@ bool is_request(char *ptr)
 			ptr++;	
 		}
 
-		return true;
+		return false;
  	}
 
 
@@ -196,7 +196,7 @@ bool is_request(char *ptr)
 		}
 
 
-		return true;
+		return false;
  	}
 
 // is POST ?
