@@ -174,12 +174,28 @@ bool is_request(char *ptr)
 // is GET ?
  	if(ptr[0]=='G' && ptr[1]=='E' && ptr[2]=='T')
  	{
+		while(*ptr!='\n' || *ptr!='\r')
+		{
+			if(*ptr=='=')
+				return true;
+			ptr++;	
+		}
+
 		return true;
  	}
 
 
  	if(ptr[0]=='g' && ptr[1]=='e' && ptr[2]=='t')
  	{
+
+		while(*ptr!='\n' || *ptr!='\r')
+		{
+			if(*ptr=='=')
+				return true;
+			ptr++;	
+		}
+
+
 		return true;
  	}
 
