@@ -2,6 +2,7 @@
 # raptor_waf
 
 Raptor is a Web application firewall made in C, uses DFA to block SQL injection, Cross site scripting and path traversal.
+http://funguscodes.blogspot.com.br/
 
 #THis is PoC version
 ![Alt text](https://github.com/CoolerVoid/raptor_waf/blob/master/doc/images/help.png)
