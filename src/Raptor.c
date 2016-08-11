@@ -102,7 +102,8 @@ int main(int argc, char ** argv)
 			case 'h':
 				if ( strnlen(optarg,65)<= 64 )
 				{
-					strcpy(param.hostarg,optarg);	
+					memset(param.hostarg,0,64);
+					strlcpy(param.hostarg,optarg,65);	
 				} else {
 					DEBUG("Error at param host");
 					exit(0);
@@ -148,10 +149,10 @@ int main(int argc, char ** argv)
 			break;
 // log
 			case 'o':
-				if ( strnlen(optarg,15)<= 14 )
+				if ( strnlen(optarg,16)<= 16 )
 				{
-					
-					strcpy(param.logarg,optarg);	
+					memset(param.logarg,0,16);	
+					strlcpy(param.logarg,optarg,17);	
 				} else {
 					DEBUG("Error at param Log");
 					exit(0);
