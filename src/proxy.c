@@ -9,6 +9,7 @@ items of struct tcp_server_thread_info
 	int stamp_port;
 	int accepted_socket;
 	int wafmode;
+	short match_option;
 */
 
 /// get ip of client
@@ -129,7 +130,7 @@ int tcp_connect_to_stamp(const char* stamp, int port)
 }
 
 // this is core function to send requests to test Requests
-int bridge_of_data(int from_socket, int to_socket, char *logfile, int wafmode)
+int bridge_of_data(int from_socket, int to_socket, char *logfile, int wafmode,short match_option)
 {
 	const int BUF_SIZE = 10512;
 	unsigned char buf[BUF_SIZE];
@@ -148,7 +149,7 @@ int bridge_of_data(int from_socket, int to_socket, char *logfile, int wafmode)
 
 
 // look rule.c, if have malicious request, return true...
-	block=Judge_malicious((char *)buf,BUF_SIZE,tmp_addr,logfile,wafmode);
+	block=Judge_malicious((char *)buf,BUF_SIZE,tmp_addr,logfile,wafmode,match_option);
 
 // BLock msg of WAF
 	if(block==true)
@@ -207,7 +208,7 @@ void *tcp_server_handler(void* arg)
                 	exit(1);
 
             		case 0:
-  		        DEBUG("Don't have data\n");
+//		        DEBUG("Don't have data\n");
                 	break;
 
             		default:
@@ -224,15 +225,14 @@ void *tcp_server_handler(void* arg)
 
                 	if(err <= 0 && errno != EAGAIN) 
 			{
-                    		DEBUG("client socket closed.\n");
+//                    		DEBUG("client socket closed.\n");
                     		running = 0;
                     		break;
                 	}
-                	total_bytes += bridge_of_data(from, to, pinfo->log_reg, pinfo->wafmode);
+                	total_bytes += bridge_of_data(from, to, pinfo->log_reg, pinfo->wafmode,pinfo->match_option);
         	}
     	}
 
-    	DEBUG("Thread closed passed %d bytes in this session.\n", total_bytes);
 
 	xfree(&arg);
 
@@ -241,7 +241,7 @@ void *tcp_server_handler(void* arg)
 	return 0;
 }
 
-void tcp_reverse_proxy(int server_port, const char* stamp, int stamp_port, int waf_mode, char *logname)
+void tcp_reverse_proxy(int server_port, const char* stamp, int stamp_port, int waf_mode, char *logname,short option_match)
 {
 	int servfd, clifd;
 	struct sockaddr_in cliaddr;
@@ -270,6 +270,7 @@ void tcp_reverse_proxy(int server_port, const char* stamp, int stamp_port, int w
         	pinfo->accepted_socket = clifd;
 		strlcpy(pinfo->log_reg,logname,sizeof(pinfo->log_reg));
         	pinfo->wafmode = waf_mode;
+		pinfo->match_option=option_match;
 
         	int ret = pthread_create(&id, NULL, tcp_server_handler, pinfo);
  

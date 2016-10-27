@@ -14,15 +14,19 @@
 #include "dfa_match.h"
 #include "file_ops.h"
 #include "blacklist.h"
+#include "matchlist.h"
 #include "../lib/BSD/strsec.h"
 
-bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, int wafmode)
+
+bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, int wafmode, short match_option)
 {
 	int line_number=1;
 	time_t t = time(NULL);
 	size_t tmp_size_buf=sizeof(char)*BUF_SIZE+1; 
-	bool xss=false,sqli=false,pathtraversal=false,match=false,block=false,blacklist=false;
+	bool xss=false,sqli=false,pathtraversal=false,match=false,block=false,blacklist=false,match_list=false,isrequest=false;
 	char *tmp3=alloca(tmp_size_buf),*tmp4=tmp3,*d=ctime(&t); 
+
+// so this part i use GOTO, don't have problem, don't have dragons here, its only loop unrolling...
 
 	if(blacklist_ip(addr)==true) // function in blacklist.c
 	{ 
@@ -30,9 +34,26 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 		goto blacklist_JMP;
 	}
 
+	isrequest=is_request(buf);
+
+
+
 // wash the request before pass to filter ;-)
 	char *tmpbuf=urldecode(buf,BUF_SIZE); // function at utils.h
 	char *clbuf=deadspace(tmpbuf); // function at utils.h, this function remove all spaces ' ' aka remove blanks of string
+	char *match_string=matchlist(tmpbuf,BUF_SIZE,match_option); // matchlist.c
+
+	if(isrequest==true && match_option>0 && match_string!=NULL) 
+	{
+		match_list=true;
+		goto matchlist_JMP;
+	}
+
+
+
+// disable DFA
+	if(wafmode==0)
+		goto end_JMP;
 
 //modes 2 and 4 not is case sentive
 	if(wafmode==2 || wafmode==4)
@@ -44,7 +65,7 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	}
 
 	
-	if(is_request((char *)tmp3)==true)
+	if(isrequest==true)
 	{	
 
 // Call	deterministic finite automaton to detect attacks
@@ -156,8 +177,27 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 		block=true;
 		memset(addr,0,strlen(addr));
 		XFREE(addr);
-		return block;
 	}
+
+
+
+// jump here if block per match list
+	matchlist_JMP:
+
+	if(match_list==true)
+	{	
+		char *report=NULL;
+		int total=250+BUF_SIZE+1024;
+		report=xmalloc(total);
+		memset(report,0,total-1);
+		snprintf(report,total,"String at match list try connect\n IP: %s\n Time: %s\n Match: %s \n Buffer: %s\n",addr,d,match_string,buf);
+		WriteFile(logfile,report);
+		memset(report,0,total-1);
+		XFREE(report);
+		block=true;	
+	}
+
+	end_JMP:
 
 	memset(addr,0,strlen(addr));
 	XFREE(addr);

@@ -13,6 +13,7 @@
 #include "utils.h"
 #include "proxy.h"
 #include "../lib/BSD/strsec.h"
+#include "matchlist.h"
 
 void init_banner_raptor()
 {
@@ -35,7 +36,7 @@ void init_banner_raptor()
    "                      ███     ███   ███    ███   ███              \n"           
    "                      ███ ▄█▄ ███   ███    ███   ███              \n"           
    "                       ▀███▀███▀    ███    █▀    ███              \n"                                            
-   "\n\tRAPTOR WEB APPLICATION FIREWALL v0.02 \n\n\t██████████████████████████████████████████████████\n"
+   "\n\tRAPTOR WEB APPLICATION FIREWALL v0.03 \n\n\t██████████████████████████████████████████████████\n"
  );
 
 }
@@ -49,7 +50,9 @@ void option_banner_raptor()
 	"\t--redirect or -r : port to redirect HTTP \n"
 	"\t--wafmode or -w : Waf mode protection level, choice level of protection between 1,2,3 or 4 \n"
 	"\t--log or -o : Write in log file \n"
-	"\tConfig Blacklist at config/blacklist_ip.txt\n"
+	"\t--match or -m : match algorithm you can choice (dfa, horspool or karp-rabin), example --match dfa \n"
+	"\tConfig Blacklist at config/blacklist_ip.txt\n"	
+	"\tConfig list rule of matchs at config/match_list.txt\n"
  );
 
 }
@@ -61,12 +64,14 @@ static struct option long_options[] =
 	{"redirect", required_argument, NULL, 'r'},
 	{"wafmode", required_argument, NULL, 'w'},
  	{"log", required_argument, NULL, 'o'}, 
+ 	{"match", required_argument, NULL, 'm'}, 
 	{NULL, 0, NULL, 0}
 };
 
 struct choice  {
  char hostarg[65];
  char logarg[17];
+ short option_algorithm;
  int portarg;
  int redirectarg;
  int wafmode;
@@ -78,6 +83,7 @@ struct choice param;
 int main(int argc, char ** argv)
 {
  	char c;
+	short options_match=0;
 
  	no_write_coredump();
  	load_signal_alarm();
@@ -95,7 +101,7 @@ int main(int argc, char ** argv)
 	opterr = 0;
 
 // get inputs of argvs
- 	while((c = getopt_long(argc, argv, "h:p:r:w:o:",long_options,NULL)) != -1)
+ 	while((c = getopt_long(argc, argv, "h:p:r:w:o:m:",long_options,NULL)) != -1)
   		switch(c) 
   		{
 // host
@@ -138,8 +144,8 @@ int main(int argc, char ** argv)
 
 					if(param.wafmode > 4 || param.wafmode < 1)
 					{
-						DEBUG("Error at param Waf mode");
-						exit(0);
+						DEBUG("param of Waf mode is NULL, Disable DFA Match mode!");
+						param.wafmode=0;
 					}
 
 				} else {
@@ -159,8 +165,41 @@ int main(int argc, char ** argv)
 				}
 			break;
 
+// match algorithm, this funtion uses for match_algorithms.c-->matchlist.c-->rule.c
+			case 'm':
+				if ( strnlen(optarg,12)<= 11 )
+				{
+					char algorithm[12];
+
+					memset(algorithm,0,11);	
+					strlcpy(algorithm,optarg,11);
+
+					if(strnstr(algorithm,"dfa",3))
+						options_match=1;
+
+					if(strnstr(algorithm,"horspool",8))
+						options_match=2;
+
+					if(strnstr(algorithm,"karp-rabin",10))
+						options_match=3;
+
+					if(options_match==0)
+					{
+						DEBUG("need match argv example --match dfa");
+						exit(0);
+					}
+
+
+					param.option_algorithm=options_match;					
+				} else {
+					DEBUG("Error at param Log");
+					exit(0);
+				}
+			break;
+
+
 			case '?':
-    				if(optopt == 'h' || optopt == 'p' || optopt == 'r' || optopt == 'w' || optopt == 'o') 
+    				if(optopt == 'h' || optopt == 'p' || optopt == 'r' || optopt == 'w' || optopt == 'o' || optopt == 'm') 
     				{
      					init_banner_raptor();
 					option_banner_raptor();
@@ -180,7 +219,7 @@ int main(int argc, char ** argv)
 	puts("\n\tSTART raptor...\n");
 
 // at proxy.c
-	tcp_reverse_proxy(param.redirectarg, param.hostarg, param.portarg, param.wafmode, param.logarg);
+	tcp_reverse_proxy(param.redirectarg, param.hostarg, param.portarg, param.wafmode, param.logarg, param.option_algorithm);
 
 	exit(0);
 }
