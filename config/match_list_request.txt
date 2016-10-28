@@ -1,8 +1,8 @@
 /c99.php
-ERRORLOL
-MySQL ERROR
-Oracle ERROR
-FATAL ERROR at SQL
+Mozilla/5.00 (Nikto/
+Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)
+(http://sqlmap.org)
+Mozilla/5.0 SF/
 /r57.php
 %20waitfor%20delay%20
 MD5(1))%20
