@@ -72,7 +72,6 @@ int max_horspool(int a, int b){
  * match = match string to find
  * matchLen = len of string match
  *
- * this function return number of ocurrences of match
  * */
 bool horspool_search(char * txt,int txtLen, char * match, int matchLen)
 {
@@ -122,7 +121,6 @@ bool horspool_search(char * txt,int txtLen, char * match, int matchLen)
  * match = match string to find
  * match_len = len of string match
  *
- * this function return number of ocurrences of match
  * 
 */
 bool Rabin_Karp_search(char *input, int input_len, char *match, int match_len) 
