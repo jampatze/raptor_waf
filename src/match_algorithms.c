@@ -65,7 +65,7 @@ int max_horspool(int a, int b){
 
  
 /*
- * simple Boyer Moore Horspool Benchmark http://en.wikipedia.org/wiki/Boyer%E2%80%93Moore%E2%80%93Horspool_algorithm
+ * simple Boyer Moore Horspool  http://en.wikipedia.org/wiki/Boyer%E2%80%93Moore%E2%80%93Horspool_algorithm
  *
  * txt_buffer = any text buffer
  * tctLen = length of text buffer
