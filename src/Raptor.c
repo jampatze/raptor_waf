@@ -48,7 +48,7 @@ void option_banner_raptor()
 	"\t--host or -h : host to protect \n"
 	"\t--port or -p : port of host to protect \n"
 	"\t--redirect or -r : port to redirect HTTP \n"
-	"\t--wafmode or -w : Waf mode protection level, choice level of protection between 1,2,3 or 4 \n"
+	"\t--wafmode or -w : Waf mode protection level, choice level of protection between 1,2,3 or 4 (mode 1 and 3 block all javascripts)\n"
 	"\t--log or -o : Write in log file \n"
 	"\t--match or -m : match algorithm you can choice (dfa, horspool or karp-rabin), example --match dfa \n"
 	"\tConfig Blacklist at config/blacklist_ip.txt\n"	

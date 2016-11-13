@@ -144,7 +144,7 @@ int main()
 // random case return string, input= tomato output=ToMatO or tOmATo...
 char *all2lowcase(char *str)
 {
-	char *str_new=xmalloc(sizeof(char)*strlen(str)+1);
+	char *str_new=xmallocarray(sizeof(char),strlen(str)+1);
 	int i=0;
 	
 	while(*str != '\0')

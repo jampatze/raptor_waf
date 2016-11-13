@@ -7,7 +7,6 @@
 #include <strings.h>
 #include <sys/socket.h> 
 #include <stdbool.h>
-#include <alloca.h>
 #include <time.h>
 #include "utils.h"
 #include "mem_ops.h"
@@ -22,9 +21,9 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 {
 	int line_number=1;
 	time_t t = time(NULL);
-	size_t tmp_size_buf=sizeof(char)*BUF_SIZE+1; 
+	size_t tmp_size_buf=BUF_SIZE+1; 
 	bool xss=false,sqli=false,pathtraversal=false,match=false,block=false,blacklist=false,match_list=false,isrequest=false;
-	char *tmp3=alloca(tmp_size_buf),*tmp4=tmp3,*d=ctime(&t); 
+	char *tmp3=xallocaarray(tmp_size_buf,sizeof(char)),*tmp4=tmp3,*d=ctime(&t); 
 
 // so this part i use GOTO, don't have problem, don't have dragons here, its only loop unrolling...
 
@@ -131,7 +130,7 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	{
 		char *report=NULL;
 		size_t tmp_size=BUF_SIZE+256;
-		report=xmalloc(tmp_size);
+		report=xmallocarray(tmp_size,sizeof(char));
 		snprintf(report,tmp_size,"Path Traversal Attack\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
 		WriteFile(logfile,report);
 		memset(report,0,BUF_SIZE+255);
@@ -143,7 +142,7 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	{
 		char *report=NULL;
 		size_t tmp_size=BUF_SIZE+256;
-		report=xmalloc(tmp_size);
+		report=xmallocarray(tmp_size,sizeof(char));
 		snprintf(report,tmp_size,"SQL injection Attack\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
 		WriteFile(logfile,report);
 		memset(report,0,BUF_SIZE+255);
@@ -155,7 +154,7 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	{	
 		char *report=NULL;
 		size_t tmp_size=BUF_SIZE+256;
-		report=xmalloc(tmp_size);
+		report=xmallocarray(tmp_size,sizeof(char));
 		snprintf(report,tmp_size,"Cross-site scripting\n IP: %s\n Time: %s\n Request:\n%s\n-----\n",addr,d,buf);
 		WriteFile(logfile,report);
 		memset(report,0,BUF_SIZE+255);
@@ -188,7 +187,7 @@ bool Judge_malicious(char *buf, const int BUF_SIZE, char *addr, char *logfile, i
 	{	
 		char *report=NULL;
 		int total=250+BUF_SIZE+1024;
-		report=xmalloc(total);
+		report=xmallocarray(total,sizeof(char));
 		memset(report,0,total-1);
 		snprintf(report,total,"String at match list try connect\n IP: %s\n Time: %s\n Match: %s \n Buffer: %s\n",addr,d,match_string,buf);
 		WriteFile(logfile,report);

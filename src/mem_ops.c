@@ -1,6 +1,43 @@
 #include "mem_ops.h"
 #include "utils.h"
 
+
+// based in OpenBSD reallocarray() function http://man.openbsd.org/reallocarray.3
+void *xallocaarray (size_t nmemb, size_t size) 
+{
+	if ((nmemb >= MUL_NO_OVERFLOW || size >= MUL_NO_OVERFLOW) && nmemb > 0 && SIZE_MAX / nmemb < size) 
+	{
+		DEBUG("integer overflow block");
+		return NULL;
+	}
+
+	void *ptr = alloca (nmemb*size);
+
+	if (ptr == NULL) 
+		return NULL;
+
+	return ptr;
+}
+
+
+
+// based in OpenBSD reallocarray() function http://man.openbsd.org/reallocarray.3
+void *xmallocarray (size_t nmemb, size_t size) 
+{
+	if ((nmemb >= MUL_NO_OVERFLOW || size >= MUL_NO_OVERFLOW) && nmemb > 0 && SIZE_MAX / nmemb < size) 
+	{
+		DEBUG("integer overflow block");
+		return NULL;
+	}
+
+	void *ptr = malloc (nmemb*size);
+
+	if (ptr == NULL) 
+		return NULL;
+
+	return ptr;
+}
+
 static void *xmalloc_fatal(size_t size) 
 {
 	if ( size == 0 ) 
