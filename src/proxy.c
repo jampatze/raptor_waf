@@ -21,6 +21,7 @@ char *get_ip_of(int sock)
 
 	len = sizeof addr;
 	getpeername(sock, (struct sockaddr*)&addr, &len);
+	
 	if (addr.ss_family == AF_INET) 
 	{
 		struct sockaddr_in *s = (struct sockaddr_in *)&addr;
