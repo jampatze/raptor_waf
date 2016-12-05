@@ -11,9 +11,10 @@
 #include <signal.h>
 #include <sys/resource.h>
 #include "utils.h"
-#include "proxy.h"
-#include "../lib/BSD/strsec.h"
-#include "matchlist.h"
+#include "proxy.h" // reverse proxy
+#include "../lib/BSD/strsec.h" // strlcpy(),strlcat()...
+#include "matchlist.h" 
+#include "validate.h" // argvs_validate
 
 void init_banner_raptor()
 {
@@ -67,18 +68,6 @@ static struct option long_options[] =
  	{"match", required_argument, NULL, 'm'}, 
 	{NULL, 0, NULL, 0}
 };
-
-struct choice  {
- char hostarg[65];
- char logarg[17];
- short option_algorithm;
- int portarg;
- int redirectarg;
- int wafmode;
-};
-
-struct choice param;
-
 
 int main(int argc, char ** argv)
 {
@@ -207,14 +196,10 @@ int main(int argc, char ** argv)
      					exit(0);
     				}
 			break;
-
-			default:
-				init_banner_raptor();
-				option_banner_raptor();
-     				DEBUG("Option -%c requires an argument.\n", optopt); 
-     				exit(0);
 		}
+	
 
+	isnull_argv();
 	init_banner_raptor();
 	puts("\n\tSTART raptor...\n");
 
