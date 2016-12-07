@@ -37,7 +37,7 @@ void init_banner_raptor()
    "                      ███     ███   ███    ███   ███              \n"           
    "                      ███ ▄█▄ ███   ███    ███   ███              \n"           
    "                       ▀███▀███▀    ███    █▀    ███              \n"                                            
-   "\n\tRAPTOR WEB APPLICATION FIREWALL v0.03 \n\n\t██████████████████████████████████████████████████\n"
+   "\n\tRAPTOR WEB APPLICATION FIREWALL v0.04 \n\n\t██████████████████████████████████████████████████\n"
  );
 
 }
