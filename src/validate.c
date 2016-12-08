@@ -22,16 +22,10 @@ void isnull_argv()
 		exit(0);
 	}
 
-
 	if(strnlen(param.logarg,16)==0)
 	{
 		DEBUG("Need log argument");
 		exit(0);
 	}
 
-	if(param.wafmode==0)
-	{
-		DEBUG("Need waf mode argument");
-		exit(0);
-	}
 }

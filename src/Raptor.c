@@ -76,7 +76,7 @@ int main(int argc, char ** argv)
 
  	no_write_coredump();
  	load_signal_alarm();
-
+	param.wafmode=0;
 
 	if(argc < 8) 
 	{
@@ -97,7 +97,7 @@ int main(int argc, char ** argv)
 			case 'h':
 				if ( strnlen(optarg,65)<= 64 )
 				{
-					memset(param.hostarg,0,64);
+					burn_mem(param.hostarg,0,64);
 					strlcpy(param.hostarg,optarg,65);	
 				} else {
 					DEBUG("Error at param host");
@@ -146,7 +146,7 @@ int main(int argc, char ** argv)
 			case 'o':
 				if ( strnlen(optarg,16)<= 16 )
 				{
-					memset(param.logarg,0,16);	
+					burn_mem(param.logarg,0,16);	
 					strlcpy(param.logarg,optarg,17);	
 				} else {
 					DEBUG("Error at param Log");
@@ -160,7 +160,7 @@ int main(int argc, char ** argv)
 				{
 					char algorithm[12];
 
-					memset(algorithm,0,11);	
+					burn_mem(algorithm,0,11);	
 					strlcpy(algorithm,optarg,11);
 
 					if(strnstr(algorithm,"dfa",3))
@@ -177,7 +177,6 @@ int main(int argc, char ** argv)
 						DEBUG("need match argv example --match dfa");
 						exit(0);
 					}
-
 
 					param.option_algorithm=options_match;					
 				} else {
