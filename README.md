@@ -12,6 +12,9 @@ $ git clone https://github.com/CoolerVoid/raptor_waf
 
 $ cd raptor_waf; make; bin/raptor
 
+Don't execute with "cd bin; ./raptor" use path "bin/raptor" look detail https://github.com/CoolerVoid/raptor_waf/issues/4
+
+
 #Example
 
 Up some HTTPd server at port 80 
