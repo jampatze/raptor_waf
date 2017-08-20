@@ -15,7 +15,7 @@ void *xallocaarray (size_t nmemb, size_t size)
 
 	if (ptr == NULL)
 	{ 
-		DEBUG("error in xallocarray() function")
+		DEBUG("error in xallocarray() function");
 		exit(1);
 	}
 
@@ -38,7 +38,7 @@ void *xmallocarray (size_t nmemb, size_t size)
 	if (ptr == NULL)
 	{
  
-		DEBUG("error in xmallocarray() function")
+		DEBUG("error in xmallocarray() function");
 		exit(1);
 	}
 
