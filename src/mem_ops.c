@@ -13,8 +13,11 @@ void *xallocaarray (size_t nmemb, size_t size)
 
 	void *ptr = alloca (nmemb*size);
 
-	if (ptr == NULL) 
-		return NULL;
+	if (ptr == NULL)
+	{ 
+		DEBUG("error in xallocarray() function")
+		exit(1);
+	}
 
 	return ptr;
 }
@@ -32,8 +35,12 @@ void *xmallocarray (size_t nmemb, size_t size)
 
 	void *ptr = malloc (nmemb*size);
 
-	if (ptr == NULL) 
-		return NULL;
+	if (ptr == NULL)
+	{
+ 
+		DEBUG("error in xmallocarray() function")
+		exit(1);
+	}
 
 	return ptr;
 }
