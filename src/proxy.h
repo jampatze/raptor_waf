@@ -10,7 +10,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h> 
 #include <stdbool.h>
-#include <alloca.h>
 #include "utils.h"
 #include "rule.h"
 #include "mem_ops.h"

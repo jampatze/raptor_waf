@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <alloca.h>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/resource.h>

@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <alloca.h>
 #include <unistd.h>
 #include <signal.h>
 #include <ctype.h>
@@ -10,7 +9,6 @@
 #include <errno.h> 
 #include <sys/types.h>
 #include <time.h>
-
 
 // set DEBUG ON
 #define BUGVIEW 1

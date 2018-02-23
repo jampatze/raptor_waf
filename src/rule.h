@@ -6,7 +6,6 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <pthread.h>
-#include <alloca.h>
 #include <time.h>
 #include "utils.h"
 #include "mem_ops.h"

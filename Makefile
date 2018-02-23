@@ -2,7 +2,7 @@ export MALLOC_MMAP_THRESHOLD_=1
 export MALLOC_CHECK_=1
 export MALLOC_PERTURB_=1
 CC=gcc
-CFLAGS=-W -Wall -O2 -fstack-protector-all
+CFLAGS=-W -Wall -O2 -fstack-protector-all 
 DFLAGS= lib/BSD/strsec.c -D_FORTIFY_SOURCE=2
 DIR=src/
 DIROUT=bin/
@@ -10,7 +10,7 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
 	LDFLAGS=-Wl -lpthread
 else
-	LDFLAGS=-Wl,-z,relro,-z,now -lpthread
+	LDFLAGS=-Wl,-z,relro,-z,now -lpthread -std=c99
 endif
 
 Raptor: $(DIR)Raptor.c 

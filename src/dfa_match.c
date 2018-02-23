@@ -18,7 +18,6 @@ Block Payload PATH traversal
 #include <string.h>
 #include "dfa_match.h"
 #include "mem_ops.h"
-#include <alloca.h>
 #include <stdbool.h>
 
 // DFA to test if letter between a-z or A-Z

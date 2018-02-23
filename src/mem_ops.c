@@ -10,14 +10,20 @@ void *xallocaarray (size_t nmemb, size_t size)
 		DEBUG("integer overflow block");
 		return NULL;
 	}
+	size_t maxmem=nmemb*size;
 
-	void *ptr = alloca (nmemb*size);
+	char ptr2[maxmem];
+
+	void *ptr=(void *)ptr2;
 
 	if (ptr == NULL)
 	{ 
 		DEBUG("error in xallocarray() function");
 		exit(1);
 	}
+
+
+	memset(ptr,'\0',maxmem);
 
 	return ptr;
 }
