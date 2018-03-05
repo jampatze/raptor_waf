@@ -140,8 +140,6 @@ int bridge_of_data(int from_socket, int to_socket, char *logfile, int wafmode,sh
 	int recvbytes = recv(from_socket, buf, BUF_SIZE-1, 0);
 	int sendbytes=0;
 	bool block=false;
-	buf[recvbytes]='\0';	
-	char *tmp_addr=get_ip_of(from_socket);	
 
     	if (recvbytes == -1) 
 	{
@@ -149,6 +147,8 @@ int bridge_of_data(int from_socket, int to_socket, char *logfile, int wafmode,sh
         	exit(1);
     	}
 
+	buf[recvbytes]='\0';	
+	char *tmp_addr=get_ip_of(from_socket);	
 
 // look rule.c, if have malicious request, return true...
 	block=Judge_malicious((char *)buf,BUF_SIZE,tmp_addr,logfile,wafmode,match_option);
