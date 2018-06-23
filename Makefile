@@ -8,9 +8,9 @@ DIR=src/
 DIROUT=bin/
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-	LDFLAGS=-Wl -lpthread
+	LDFLAGS=-Wl -lpthread -lpcre
 else
-	LDFLAGS=-Wl,-z,relro,-z,now -lpthread -std=c99
+	LDFLAGS=-Wl,-z,relro,-z,now -lpthread -std=c99 -lpcre
 endif
 
 Raptor: $(DIR)Raptor.c 

@@ -16,8 +16,11 @@ char *matchlist(char *input,int input_len, short option_algorithm)
 	FILE * arq;
 	bool at_list=false;
 	int line_len=0;
-	
-	arq = fopen("config/match_list_request.txt", "r");
+
+	if(option_algorithm==4)	
+		arq = fopen("config/regex_rules.txt", "r"); // if user choice regex need to use regex list
+	else
+		arq = fopen("config/match_list_request.txt", "r");
 
 	if( arq == NULL )
 	{
@@ -49,6 +52,10 @@ char *matchlist(char *input,int input_len, short option_algorithm)
 			
 				case 3:
 				at_list=Rabin_Karp_search(input, input_len, line, line_len-2);
+				break;
+ 	
+				case 4:
+				at_list=pcre_regex_search(input, input_len, line);
 				break; 
 			}
 

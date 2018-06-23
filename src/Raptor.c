@@ -37,7 +37,7 @@ void init_banner_raptor()
    "                      ███     ███   ███    ███   ███              \n"           
    "                      ███ ▄█▄ ███   ███    ███   ███              \n"           
    "                       ▀███▀███▀    ███    █▀    ███              \n"                                            
-   "\n\tRAPTOR WEB APPLICATION FIREWALL v0.04 \n\n\t██████████████████████████████████████████████████\n"
+   "\n\tRAPTOR WEB APPLICATION FIREWALL v0.05 \n\n\t██████████████████████████████████████████████████\n"
  );
 
 }
@@ -49,11 +49,14 @@ void option_banner_raptor()
 	"\t--host or -h : host to protect \n"
 	"\t--port or -p : port of host to protect \n"
 	"\t--redirect or -r : port to redirect HTTP \n"
-	"\t--wafmode or -w : Waf mode protection level, choice level of protection between 1,2,3 or 4 (mode 1 and 3 block all javascripts)\n"
+	"\t--wafmode or -w : Waf mode protection level, choice level of protection between 1,2,3 or 4 (mode 1 and 3 block all javascripts), \n\tnote: waf mode is a beta test sensitive DFA, if you need to use in production put zero '0'...\n"
 	"\t--log or -o : Write in log file \n"
-	"\t--match or -m : match algorithm you can choice (dfa, horspool or karp-rabin), example --match dfa \n"
+	"\t--match or -m : match algorithm you can choice (dfa, horspool,pcre(regex) or karp-rabin), example --match pcre \n"
 	"\tConfig Blacklist at config/blacklist_ip.txt\n"	
 	"\tConfig list rule of matchs at config/match_list.txt\n"
+	"\tConfig list rules of regex matchs using PCRE at config/regex_rules.txt\n"
+	"\tExample: \nbin/Raptor -h 127.0.0.1 -p 80 -r 8090 -w 0 -o resultwaf.txt -m pcre\n"
+
  );
 
 }
@@ -171,6 +174,9 @@ int main(int argc, char ** argv)
 
 					if(strnstr(algorithm,"karp-rabin",10))
 						options_match=3;
+
+					if(strnstr(algorithm,"pcre",4))
+						options_match=4;
 
 					if(options_match==0)
 					{

@@ -12,12 +12,13 @@ $ git clone https://github.com/CoolerVoid/raptor_waf
 
 $ cd raptor_waf; make; bin/raptor
 
-Don't execute with "cd bin; ./raptor" use path "bin/raptor" look detail https://github.com/CoolerVoid/raptor_waf/issues/4
+Don't execute with "cd bin; ./raptor" use full path "bin/raptor" look detail https://github.com/CoolerVoid/raptor_waf/issues/4
 
 
 # Example
 
 Up some HTTPd server at port 80 
+redirect with raptor to port 8883
 
 $ bin/Raptor -h localhost -p 80 -r 8883 -w 4 -o loglog.txt
 
@@ -28,7 +29,9 @@ $ cp doc/test_dfa/test.php /var/www/html
 Now you can test xss attacks at 
 http://localhost:8883/test.php
 
+Other option to run(now with regex, look file config/regex_rules.txt to edit rules):
 
+$ bin/Raptor -h 127.0.0.1 -p 80 -r 8883 -w 0 -o resultwaf -m pcre
 
 # Look the docs
 

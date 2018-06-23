@@ -161,6 +161,26 @@ bool Rabin_Karp_search(char *input, int input_len, char *match, int match_len)
 	return false;
 }
 
+bool pcre_regex_search(const char *string,int string_len,const char *expression)
+{
+	const char *err;
+	int errofs=0,offset=0;
+	int ovector[100];
+
+	pcre *re = pcre_compile(expression, 0, &err, &errofs, NULL);
+
+	if (re == NULL) 
+	{
+		DEBUG(" regex compilation failed : %s\n",expression);
+		exit(0);
+	}
+	const int rc = pcre_exec(re, NULL, string, string_len, offset, 0, ovector, 100);
+	pcre_free(re);
+
+	return (rc > 0)?true:false;
+
+}
+
 /*
   Match with GPU something with NVIDIA's CUDA or OpenCL ? relax at the future i write this... :-D
 */

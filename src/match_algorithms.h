@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "utils.h"
+#include <pcre.h>
 // DFA search algorithm
 int NextMachineState(char *pat, int M, int state, int x);
 void write_tf(char *pat, int M, int TF[][256]);
@@ -24,6 +25,9 @@ bool horspool_search(char * txt,int txtLen, char * match, int matchLen);
 
 // Rabin–Karp algorithm - https://en.wikipedia.org/wiki/Rabin%E2%80%93Karp_algorithm 
 bool Rabin_Karp_search(char *input, int input_len, char *match, int match_len); 
+
+// pcre match
+bool pcre_regex_search(const char *string,int string_len,const char *expression);
 /*
   Match with GPU something with NVIDIA's CUDA or OpenCL ? relax at the future i write this... :-D
 
