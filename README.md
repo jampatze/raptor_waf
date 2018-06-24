@@ -12,7 +12,10 @@ $ git clone https://github.com/CoolerVoid/raptor_waf
 
 $ cd raptor_waf; make; bin/raptor
 
+#Note:
 Don't execute with "cd bin; ./raptor" use full path "bin/raptor" look detail https://github.com/CoolerVoid/raptor_waf/issues/4
+
+Need lib pcre to  compile.
 
 
 # Example
