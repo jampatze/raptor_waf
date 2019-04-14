@@ -26,7 +26,7 @@ char *matchlist(char *input,int input_len, short option_algorithm)
 	{
 
 		DEBUG("error to open() file"); 	 
-		exit(1);
+		return NULL;
 	}
 
 	char line[1024];
@@ -65,7 +65,7 @@ char *matchlist(char *input,int input_len, short option_algorithm)
 	if( fclose(arq) == EOF )
 	{
 		DEBUG("Error in close() file config/matchlist_ip.txt ");
-		exit(1);
+		return NULL;
 	}
 		
 	arq=NULL;

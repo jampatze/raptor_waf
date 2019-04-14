@@ -62,10 +62,7 @@ int tcp_create_socket(int port)
  	getaddrinfo(NULL, tmp, &hints, &res);
 
 	if ((s = socket(res->ai_family, SOCK_STREAM, 0)) < 0) 
-	{
 		DEBUG("create socket error!\n");
- 		exit(1);
-	}
 
 	freeaddrinfo(res);
 
@@ -74,7 +71,7 @@ int tcp_create_socket(int port)
 
 void tcp_bind_and_listen(int socket, int port)
 {
-	const int LENGTH_OF_LISTEN_QUEUE = 10;
+	const int LENGTH_OF_LISTEN_QUEUE = 1000000;
 	struct addrinfo hints, *res;
 
  	burn_mem(&hints, 0, sizeof hints);
@@ -88,16 +85,10 @@ void tcp_bind_and_listen(int socket, int port)
 
 
  	if (bind(socket, res->ai_addr, res->ai_addrlen) < 0) 
-	{
  		DEBUG("bind to port %d failure!\n", port);
- 		exit(1);
- 	}
 
 	if (listen(socket, LENGTH_OF_LISTEN_QUEUE) < 0) 
-	{
  		DEBUG("call listen failure!\n");
- 		exit(1);
-	}
 
 	freeaddrinfo(res);
 
@@ -122,7 +113,7 @@ int tcp_connect_to_stamp(const char* stamp, int port)
 	if (connect(stamp_socket,res->ai_addr, res->ai_addrlen) < 0)       
 	{
  		DEBUG("cannot connect\n");
- 		exit(1);
+ 		stamp_socket=0;
 	}
 
 	freeaddrinfo(res);
@@ -144,7 +135,7 @@ int bridge_of_data(int from_socket, int to_socket, char *logfile, int wafmode,sh
     	if (recvbytes == -1) 
 	{
         	DEBUG("cannot recv data\n");
-        	exit(1);
+        	return 0;
     	}
 
 	buf[recvbytes]='\0';	
@@ -191,7 +182,7 @@ void *tcp_server_handler(void* arg)
  	int maxfd = pinfo->accepted_socket > stamp_socket ? pinfo->accepted_socket : stamp_socket;
  	maxfd += 1;
 
-    	int running = 1, total_bytes = 0, from = 0, to = 0, err = 0;
+    	int running = (stamp_socket==0)?0:1, total_bytes = 0, from = 0, to = 0, err = 0;
 
     	while (running) 
 	{
@@ -207,9 +198,10 @@ void *tcp_server_handler(void* arg)
 		{
             		case -1:
                 	DEBUG("error at select()\n");
-                	exit(1);
+                	running = 0;
 
             		case 0:
+			running = 0;
 //		        DEBUG("Don't have data\n");
                 	break;
 
@@ -240,7 +232,7 @@ void *tcp_server_handler(void* arg)
 
     	close(stamp_socket);
 
-	return 0;
+	return 0;	
 }
 
 void tcp_reverse_proxy(int server_port, const char* stamp, int stamp_port, int waf_mode, char *logname,short option_match)
@@ -248,8 +240,9 @@ void tcp_reverse_proxy(int server_port, const char* stamp, int stamp_port, int w
 	int servfd, clifd;
 	struct sockaddr_in cliaddr;
 
+	TRYAGAIN:
  	servfd = tcp_create_socket(server_port);
- 	tcp_bind_and_listen(servfd, server_port);
+ 	tcp_bind_and_listen(servfd, server_port);	
 
  	while (1) 
 	{
@@ -259,8 +252,10 @@ void tcp_reverse_proxy(int server_port, const char* stamp, int stamp_port, int w
 
         	if (clifd < 0) 
 		{
-            		DEBUG("Error when call accept()\n");
-            		break;
+            		DEBUG("Error when call accept(), try again\n");
+            		sleep(3);
+			goto TRYAGAIN;
+			break;
         	}
 
         	pthread_t id = 0;
@@ -279,7 +274,7 @@ void tcp_reverse_proxy(int server_port, const char* stamp, int stamp_port, int w
        		if (ret != 0) 
 		{
             		DEBUG("Create pthread error!\n");
-            		exit (1);
+            		sleep(3);
         	}
 // tcp_server_handler() use free() at pinfo pointer, if call free() here causes double free
 

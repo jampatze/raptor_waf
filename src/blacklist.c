@@ -15,7 +15,7 @@ bool blacklist_ip(char * addr)
 	{
 
 		DEBUG("error to open() file"); 	 
-		exit(1);
+		return false;
 	}
 
 	char line[128];
@@ -29,7 +29,7 @@ bool blacklist_ip(char * addr)
 	if( fclose(arq) == EOF )
 	{
 		DEBUG("Error in close() file config/blacklist_ip.txt ");
-		exit(1);
+		return false;
 	}
 	arq=NULL;
 

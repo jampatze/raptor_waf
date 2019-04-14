@@ -170,46 +170,27 @@ char *all2lowcase(char *str)
 
 bool is_request(char *ptr)
 {
+	if(ptr == NULL)
+		return false;
+
+	if(ptr[0]==' ')
+		return false;
+
+	if(ptr[1]==' ')
+		return false;
+
+	if(strnlen(ptr,12) < 10)
+		return false;
+
+
+
 // is GET ?
  	if(ptr[0]=='G' && ptr[1]=='E' && ptr[2]=='T')
- 	{
-		while(*ptr!='\n' || *ptr!='\r')
-		{
-			if(*ptr=='=')
-				return true;
-			ptr++;	
-		}
-
-		return false;
- 	}
-
-
- 	if(ptr[0]=='g' && ptr[1]=='e' && ptr[2]=='t')
- 	{
-
-		while(*ptr!='\n' || *ptr!='\r')
-		{
-			if(*ptr=='=')
-				return true;
-			ptr++;	
-		}
-
-
-		return false;
- 	}
+		return true;
 
 // is POST ?
  	if(ptr[0]=='P' && ptr[1]=='O' && ptr[2]=='S' && ptr[3]=='T')
- 	{
 		return true;
- 	}
-
-
- 	if(ptr[0]=='p' && ptr[1]=='o' && ptr[2]=='s' && ptr[3]=='t')
- 	{
-		return true;
- 	}
-
 
  return false;
 }

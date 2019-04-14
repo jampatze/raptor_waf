@@ -13,7 +13,7 @@ int WriteFile(char *file,char *str)
 	{
 //		fclose(arq);
 		DEBUG("error in WriteFile() %s",file); 
-		exit(1);
+		return 0;
 	}
 
 	fprintf(arq,"%s\n",str); 
@@ -21,7 +21,7 @@ int WriteFile(char *file,char *str)
 	if( fclose(arq) == EOF )
 	{
 		DEBUG("error in Write() file %s",file);
-		exit(1);
+		return 0;
 	}
 	arq=NULL;
  
