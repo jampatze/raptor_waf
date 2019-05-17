@@ -199,6 +199,7 @@ void *tcp_server_handler(void* arg)
             		case -1:
                 	DEBUG("error at select()\n");
                 	running = 0;
+			break;
 
             		case 0:
 			running = 0;
