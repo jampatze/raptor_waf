@@ -1,5 +1,6 @@
 #include "proxy.h"
 #include "../lib/BSD/strsec.h"
+#include <errno.h>
 
 /*
 items of struct tcp_server_thread_info
@@ -85,7 +86,7 @@ void tcp_bind_and_listen(int socket, int port)
 
 
  	if (bind(socket, res->ai_addr, res->ai_addrlen) < 0) 
- 		DEBUG("bind to port %d failure!\n", port);
+ 		DEBUG("Failed to bind port %d, errno %d.\n", port, errno);
 
 	if (listen(socket, LENGTH_OF_LISTEN_QUEUE) < 0) 
  		DEBUG("call listen failure!\n");
@@ -249,14 +250,25 @@ void tcp_reverse_proxy(int server_port, const char* stamp, int stamp_port, int w
 	{
         	socklen_t length = sizeof(cliaddr);
 
+		// Resume accepting after interupted system calls.
+		// Might happen in low power systems (eg. embedded).
+		RESUME:
         	clifd = accept(servfd, (struct sockaddr*)&cliaddr, &length);
 
         	if (clifd < 0) 
 		{
-            		DEBUG("Error when call accept(), try again\n");
-            		sleep(3);
-			goto TRYAGAIN;
-			break;
+			DEBUG("Error nro. %d while accept()\n", errno);
+
+			if (errno == EINTR)
+			{
+				DEBUG("Interrupted system call, trying again...");
+				sleep(3);
+				goto RESUME;
+			} else {
+            			sleep(3);
+				goto TRYAGAIN;
+				break;
+			}
         	}
 
         	pthread_t id = 0;
