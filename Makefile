@@ -1,16 +1,16 @@
 export MALLOC_MMAP_THRESHOLD_=1
 export MALLOC_CHECK_=1
 export MALLOC_PERTURB_=1
-CC=gcc
-CFLAGS=-g -W -Wall -O1 -fstack-protector-all 
+CC=musl-gcc
+CFLAGS=-g -static -v -W -Wall -O1 -fstack-protector-all -I /home/ng/musl/include
 DFLAGS= lib/BSD/strsec.c
 DIR=src/
 DIROUT=bin/
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-	LDFLAGS=-Wl -lpthread -lpcre
+	LDFLAGS=-Wl -lpthread -lpcre --static -L/usr/local/lib
 else
-	LDFLAGS=-Wl,-z,relro,-z,now -lpthread -std=c99 -lpcre
+	LDFLAGS=-Wl,-z,relro,-z,now -lpthread -std=c99 -lpcre --static -L/usr/local/lib
 endif
 
 Raptor: $(DIR)Raptor.c 
