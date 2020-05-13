@@ -178,7 +178,6 @@ void *tcp_server_handler(void* arg)
 	int stamp_socket = tcp_connect_to_stamp(pinfo->stamp, pinfo->stamp_port);
 
  	fd_set sockets;
- 	struct timeval tv;
 
  	int maxfd = pinfo->accepted_socket > stamp_socket ? pinfo->accepted_socket : stamp_socket;
  	maxfd += 1;
@@ -191,26 +190,18 @@ void *tcp_server_handler(void* arg)
         	FD_SET(pinfo->accepted_socket, &sockets);
         	FD_SET(stamp_socket, &sockets);
 
-        	tv.tv_sec = 3;
-        	tv.tv_usec = 0;
-        
-// at the future add libevent 
-        	switch(select(maxfd, &sockets, NULL, NULL, &tv)) 
-		{
-            		case -1:
-                	DEBUG("error at select()\n");
-                	running = 0;
+        	struct timeval tv = {7, 0};
+
+		int retval = select(maxfd, &sockets, NULL, NULL, &tv);
+//		DEBUG("retval is %d\n", retval);
+
+		if (retval == -1) {
+                	DEBUG("error at select()\n")
 			break;
-
-            		case 0:
-			running = 0;
-//		        DEBUG("Don't have data\n");
-                	break;
-
-            		default:
+		} else if (retval) {
                 	from = pinfo->accepted_socket; 
 			to = stamp_socket;
- 
+
 	               	if (FD_ISSET(stamp_socket, &sockets)) 
 			{
                     		from = stamp_socket;
@@ -219,14 +210,15 @@ void *tcp_server_handler(void* arg)
 
                 	err = ping_socket(from);
 
-                	if(err <= 0 && errno != EAGAIN) 
+                	if(err <= 0 && (errno != EAGAIN || errno != EWOULDBLOCK))
 			{
-//                    		DEBUG("client socket closed.\n");
-                    		running = 0;
+                    		DEBUG("Client socket closed, error nro %d.\n", errno);
                     		break;
                 	}
                 	total_bytes += bridge_of_data(from, to, pinfo->log_reg, pinfo->wafmode,pinfo->match_option);
-        	}
+        	} else {
+			DEBUG("No data received at accept, trying again...\n");
+		}
     	}
 
 
